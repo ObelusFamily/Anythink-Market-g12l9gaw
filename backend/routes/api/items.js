@@ -4,6 +4,7 @@ var Item = mongoose.model("Item");
 var Comment = mongoose.model("Comment");
 var User = mongoose.model("User");
 var auth = require("../auth");
+var openai = require("openai");
 const { sendEvent } = require("../../lib/event");
 
 // Preload item objects on routes with ':item'
@@ -147,7 +148,7 @@ router.post("/", auth.required, function(req, res, next) {
       var item = new Item(req.body.item);
       if (!item.image){
         openai.createImage({
-          prompt: "a white siamese cat",
+          prompt: item.title,
           n: 1,
           size: "1024x1024",
         }).then(response => item.image= response.data.data[0].url);
