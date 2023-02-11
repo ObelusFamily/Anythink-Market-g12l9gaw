@@ -145,6 +145,14 @@ router.post("/", auth.required, function(req, res, next) {
       }
 
       var item = new Item(req.body.item);
+      if (!item.image){
+        openai.createImage({
+          prompt: "a white siamese cat",
+          n: 1,
+          size: "1024x1024",
+        }).then(response => item.image= response.data.data[0].url);
+        
+      }
 
       item.seller = user;
 
